@@ -222,7 +222,7 @@ const Criar: React.FC = () => {
                                     <input
                                         type="text"
                                         name="areaAtuacao"
-                                        placeholder="Ex: Matemática, Física..."
+                                        placeholder="Ex: Redes, Python..."
                                         value={form.areaAtuacao}
                                         onChange={handleChange}
                                         required

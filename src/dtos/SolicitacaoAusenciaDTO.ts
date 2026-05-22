@@ -7,9 +7,11 @@ export interface SolicitacaoAusenciaDTO {
 
     aula: {
         id: number;
+        nomeDisciplina?: string;
     };
 
     professor: {
         id: number;
+        nome?: string;
     };
 }

@@ -627,14 +627,14 @@ const GerenciamentoSubstituicao: React.FC = () => {
                         <table className="schedule-table">
 
                             <thead>
-
                             <tr>
                                 <th>ID</th>
                                 <th>Professor Substituto</th>
                                 <th>Coordenador</th>
-                                <th>Solicitação ID</th>
+                                <th>Professor Solicitante</th>
                                 <th>Data Ausência</th>
                                 <th>Motivo</th>
+                                <th>Aula</th>
                                 <th>Ações</th>
                             </tr>
                             </thead>
@@ -658,7 +658,7 @@ const GerenciamentoSubstituicao: React.FC = () => {
                                         </td>
 
                                         <td>
-                                            #{s.solicitacaoAusencia?.id || '—'}
+                                            {s.solicitacaoAusencia?.professor?.nome || '—'}
                                         </td>
 
                                         <td>
@@ -670,7 +670,10 @@ const GerenciamentoSubstituicao: React.FC = () => {
                                         </td>
 
                                         <td>
+                                            {s.solicitacaoAusencia?.aula?.nomeDisciplina || '—'}
+                                        </td>
 
+                                        <td>
                                             <div className="acoes-cell">
 
                                                 <button
@@ -698,9 +701,8 @@ const GerenciamentoSubstituicao: React.FC = () => {
                             ) : (
 
                                 <tr>
-
                                     <td
-                                        colSpan={7}
+                                        colSpan={8}
                                         style={{
                                             textAlign: 'center',
                                             padding: '24px',
@@ -739,15 +741,10 @@ const GerenciamentoSubstituicao: React.FC = () => {
                         </h3>
 
                         <p className="modal-sub">
-
-                            Solicitação #
-                            {subEditando
-                                .solicitacaoAusencia?.id}
-
+                            Solicitação de{' '}
+                            {subEditando.solicitacaoAusencia?.professor?.nome || '—'}
                             {' — '}
-
-                            {subEditando
-                                .solicitacaoAusencia?.dataAusencia || ''}
+                            {subEditando.solicitacaoAusencia?.dataAusencia || ''}
                         </p>
 
                         <div className="modal-info-row">
@@ -768,8 +765,18 @@ const GerenciamentoSubstituicao: React.FC = () => {
                             </span>
 
                             <span className="modal-info-value">
-                                {subEditando
-                                    .solicitacaoAusencia?.motivo || '—'}
+                                {subEditando.solicitacaoAusencia?.motivo || '—'}
+                            </span>
+                        </div>
+
+                        <div className="modal-info-row">
+
+                            <span className="modal-info-label">
+                                Aula
+                            </span>
+
+                            <span className="modal-info-value">
+                                {subEditando.solicitacaoAusencia?.aula?.nomeDisciplina || '—'}
                             </span>
                         </div>
 

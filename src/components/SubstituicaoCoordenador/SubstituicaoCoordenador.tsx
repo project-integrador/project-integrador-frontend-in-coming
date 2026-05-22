@@ -178,17 +178,29 @@ const TelaSubstituicoes: React.FC = () => {
                 {!loading && !erro && (
                     <table className="schedule-table">
                         <thead>
-                        <tr><th>ID</th><th>Professor Substituto</th><th>Coordenador</th><th>Solicitação ID</th><th>Data Ausência</th><th>Motivo</th></tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Professor Substituto</th>
+                            <th>Coordenador</th>
+                            <th>Prof. Ausente</th>
+                            <th>Data Ausência</th>
+                            <th>Motivo</th>
+                            <th>Aula</th>
+                        </tr>
                         </thead>
                         <tbody>
                         {substituicoes.length > 0 ? substituicoes.map((s) => (
                             <tr key={s.id}>
-                                <td>#{s.id}</td><td>{s.professorSubstituto?.nome || '—'}</td>
-                                <td>{s.coordenador?.nome || '—'}</td><td>#{s.solicitacaoAusencia?.id || '—'}</td>
-                                <td>{s.solicitacaoAusencia?.dataAusencia || '—'}</td><td>{s.solicitacaoAusencia?.motivo || '—'}</td>
+                                <td>#{s.id}</td>
+                                <td>{s.professorSubstituto?.nome || '—'}</td>
+                                <td>{s.coordenador?.nome || '—'}</td>
+                                <td>{s.solicitacaoAusencia?.professor?.nome || '—'}</td>
+                                <td>{s.solicitacaoAusencia?.dataAusencia || '—'}</td>
+                                <td>{s.solicitacaoAusencia?.motivo || '—'}</td>
+                                <td>{s.solicitacaoAusencia?.aula?.nomeDisciplina || '—'}</td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#64748b' }}>Nenhuma substituição registrada.</td></tr>
+                            <tr><td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: '#64748b' }}>Nenhuma substituição registrada.</td></tr>
                         )}
                         </tbody>
                     </table>

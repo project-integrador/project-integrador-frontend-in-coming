@@ -27,10 +27,9 @@ interface EventoCalendario {
     data: string;
     motivo: string;
     status: string;
-    aulaId: number;
-    professorId: number;
+    aulaNome: string;
+    professorNome: string;
 }
-
 // ─── Modal de Perfil ──────────────────────────────────────────────────────────
 
 interface ModalPerfilProps {
@@ -185,8 +184,8 @@ const CalendarioCoordenador: React.FC = () => {
             data,
             motivo: s.motivo,
             status: s.status,
-            aulaId: s.aula.id,
-            professorId: s.professor.id,
+            aulaNome: s.aula.nomeDisciplina || `#${s.aula.id}`,
+            professorNome: s.professor.nome || `#${s.professor.id}`,
         });
     });
 
@@ -368,11 +367,11 @@ const CalendarioCoordenador: React.FC = () => {
                                 <div className="detalhe-status-bar" style={{ backgroundColor: statusCor[ev.status] }} />
                                 <div className="detalhe-body">
                                     <span className="detalhe-label">Professor</span>
-                                    <span className="detalhe-valor">{professoresMap[ev.professorId] || `#${ev.professorId}`}</span>
+                                    <span className="detalhe-valor">{ev.professorNome}</span>
                                     <span className="detalhe-label" style={{ marginTop: 8 }}>Motivo</span>
                                     <span className="detalhe-valor">{ev.motivo}</span>
-                                    <span className="detalhe-label" style={{ marginTop: 8 }}>Aula ID</span>
-                                    <span className="detalhe-valor">#{ev.aulaId}</span>
+                                    <span className="detalhe-label" style={{ marginTop: 8 }}>Aula</span>
+                                    <span className="detalhe-valor">{ev.aulaNome}</span>
                                     <span className="detalhe-label" style={{ marginTop: 8 }}>Status</span>
                                     <span className="detalhe-badge" style={{ backgroundColor: statusCor[ev.status] + '22', color: statusCor[ev.status] }}>
                                         {ev.status}
@@ -399,7 +398,7 @@ const CalendarioCoordenador: React.FC = () => {
                                 .map((s, i) => (
                                     <div className="mes-item" key={i}>
                                         <span className="mes-data">{s.dataAusencia.split('-').reverse().join('/')}</span>
-                                        <span className="mes-motivo">{professoresMap[s.professor.id] || `Prof #${s.professor.id}`}</span>
+                                        <span className="mes-motivo">{s.professor.nome || `Prof #${s.professor.id}`}</span>
                                         <span className="mes-badge" style={{ backgroundColor: statusCor[s.status] + '22', color: statusCor[s.status] }}>
                                             {s.status}
                                         </span>
