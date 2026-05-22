@@ -664,3 +664,296 @@ body {
     color: var(--text-light);
     font-size: 12px;
 }
+
+/* ===================================================== */
+/* ANIMAÇÕES GERAIS */
+/* ===================================================== */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 0 rgba(37, 99, 235, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 0 0 rgba(37, 99, 235, 0.4);
+    }
+}
+
+/* ===================================================== */
+/* SIDEBAR */
+/* ===================================================== */
+
+.sidebar {
+    animation: fadeLeft 0.8s ease;
+    backdrop-filter: blur(14px);
+}
+
+/* ===================================================== */
+/* MAIN */
+/* ===================================================== */
+
+.main-content {
+    animation: fadeRight 0.8s ease;
+}
+
+/* ===================================================== */
+/* HEADER */
+/* ===================================================== */
+
+.top-header {
+    animation: fadeUp 0.8s ease;
+}
+
+/* ===================================================== */
+/* CARDS */
+/* ===================================================== */
+
+.card {
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border 0.25s ease;
+    animation: fadeUp 0.7s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+            0 15px 35px rgba(0,0,0,0.08),
+            0 0 0 1px rgba(37,99,235,0.08);
+}
+
+/* ===================================================== */
+/* ÍCONES DOS CARDS */
+/* ===================================================== */
+
+.card-icon {
+    transition: all 0.3s ease;
+}
+
+.card:hover .card-icon {
+    transform: scale(1.1) rotate(4deg);
+}
+
+/* ===================================================== */
+/* PANELS */
+/* ===================================================== */
+
+.panel {
+    animation: fadeUp 1s ease;
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+.panel:hover {
+    transform: translateY(-4px);
+    box-shadow:
+            0 15px 30px rgba(0,0,0,0.05);
+}
+
+/* ===================================================== */
+/* BOTÕES */
+/* ===================================================== */
+
+button,
+.btn-primary-white,
+.btn-outline,
+.btn-enviar,
+.btn-cancelar,
+.btn-salvar-modal {
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+}
+
+button:hover,
+.btn-primary-white:hover,
+.btn-outline:hover,
+.btn-enviar:hover,
+.btn-salvar-modal:hover {
+    transform: translateY(-2px);
+}
+
+/* ===================================================== */
+/* CTA BOX */
+/* ===================================================== */
+
+.cta-box {
+    animation: pulseGlow 4s infinite;
+    overflow: hidden;
+}
+
+.cta-box::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background:
+            linear-gradient(
+                    120deg,
+                    transparent,
+                    rgba(255,255,255,0.08),
+                    transparent
+            );
+
+    transform: rotate(25deg);
+    top: -120%;
+    left: -120%;
+    animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+    to {
+        left: 100%;
+        top: 100%;
+    }
+}
+
+/* ===================================================== */
+/* TABELA */
+/* ===================================================== */
+
+.schedule-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.schedule-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* ===================================================== */
+/* NAV ITEMS */
+/* ===================================================== */
+
+.nav-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,0.08),
+                    transparent
+            );
+
+    transition: 0.5s;
+}
+
+.nav-item:hover::before {
+    left: 100%;
+}
+
+/* ===================================================== */
+/* PERFIL */
+/* ===================================================== */
+
+.user-profile-btn {
+    transition:
+            background 0.2s ease,
+            transform 0.2s ease;
+}
+
+.user-profile-btn:hover {
+    transform: scale(1.02);
+}
+
+/* ===================================================== */
+/* MODAL */
+/* ===================================================== */
+
+.modal-overlay {
+    animation: fadeUp 0.25s ease;
+    backdrop-filter: blur(5px);
+}
+
+.modal-box {
+    animation: fadeUp 0.35s ease;
+}
+
+/* ===================================================== */
+/* INPUTS */
+/* ===================================================== */
+
+input,
+textarea,
+select {
+    transition:
+            border 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    transform: scale(1.01);
+}
+
+/* ===================================================== */
+/* AVATARES */
+/* ===================================================== */
+
+.avatar-mini,
+.avatar-grande-circulo,
+.user-avatar {
+    transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.avatar-mini:hover,
+.avatar-grande-circulo:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(37,99,235,0.25);
+}
