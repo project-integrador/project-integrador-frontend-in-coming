@@ -1,0 +1,60 @@
+/* Reutiliza todo o visual do Login.css —
+   importe o Login.css aqui ou copie os estilos base.
+   Abaixo apenas os estilos exclusivos desta tela. */
+
+/* Toggle de tipo */
+.tipo-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    background-color: #f1f5f9;
+    padding: 4px;
+    border-radius: 12px;
+}
+
+.tipo-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #64748b;
+    background-color: transparent;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tipo-btn.active {
+    background-color: #fff;
+    color: #3b82f6;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tipo-btn:hover:not(.active) {
+    color: #334155;
+}
+
+/* Botão voltar */
+.btn-voltar-login {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 16px;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.btn-voltar-login:hover {
+    color: #3b82f6;
+}

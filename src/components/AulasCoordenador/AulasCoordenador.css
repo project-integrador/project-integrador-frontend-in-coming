@@ -1,0 +1,212 @@
+@import '../DashboardCoordenador/DashboardCoordenador.css';
+
+/* ─── Busca ─── */
+.input-busca {
+    padding: 8px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    outline: none;
+    width: 260px;
+    transition: border 0.2s;
+}
+
+.input-busca:focus {
+    border-color: #3b82f6;
+}
+
+/* ─── Célula de disciplina ─── */
+.disciplina-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.disciplina-icon {
+    width: 28px;
+    height: 28px;
+    background-color: #eff6ff;
+    color: #3b82f6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ─── Badge de horas ─── */
+.badge-horas {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* ─── Célula de professor ─── */
+.professor-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar-mini-table {
+    width: 28px;
+    height: 28px;
+    background-color: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ─── Email ─── */
+.email-cell {
+    color: #64748b;
+    font-size: 12px;
+}
+/* ─── Perfil Clicável ─────────────────────────────────────── */
+
+.user-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 4px;
+    margin-top: 8px;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s;
+    text-align: left;
+}
+
+.user-profile-btn:hover { background-color: #1e293b; }
+.user-profile-btn:hover .perfil-settings-icon { opacity: 1; }
+
+.perfil-settings-icon {
+    color: #64748b;
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-img-grande {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ─── Modal Perfil ────────────────────────────────────────── */
+
+.modal-perfil { max-width: 400px; }
+
+.modal-perfil-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-perfil-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.btn-fechar-modal {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.btn-fechar-modal:hover { color: #334155; }
+
+.perfil-avatar-grande {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.avatar-grande-circulo {
+    width: 80px;
+    height: 80px;
+    background-color: #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.btn-trocar-foto {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-trocar-foto:hover { background: #e2e8f0; }
+
+.perfil-info-static {
+    display: flex;
+    flex-direction: column;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    gap: 2px;
+}
+
+.perfil-email-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.perfil-email-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 4px;
+}
+
+.btn-salvar-modal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}

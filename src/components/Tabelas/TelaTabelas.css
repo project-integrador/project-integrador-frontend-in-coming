@@ -1,0 +1,99 @@
+.tabelas-container {
+    padding: 40px;
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    min-height: 100vh;
+}
+
+.tabelas-title {
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.loading-text {
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+.alert-error {
+    padding: 15px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #fca5a5;
+}
+
+.alert-success {
+    padding: 15px;
+    background-color: #dcfce7;
+    color: #166534;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #86efac;
+}
+
+.tabela-dados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabela-dados thead tr {
+    background-color: #1e293b;
+    color: #ffffff;
+    text-align: left;
+}
+
+.tabela-dados th {
+    padding: 15px;
+    font-weight: 600;
+}
+
+.tabela-dados td {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.tabela-dados tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.badge-ativo {
+    background-color: #dcfce7;
+    color: #166534;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-inativo {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.btn-voltar {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-voltar:hover {
+    background-color: #2563eb;
+}
