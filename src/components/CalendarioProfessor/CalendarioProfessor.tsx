@@ -113,12 +113,14 @@ const MESES = [
 ];
 const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
+// Interface
 interface EventoCalendario {
     data: string; // "YYYY-MM-DD"
     motivo: string;
     status: string;
-    aulaId: number;
+    aulaNome: string; // 👈 era: aulaId: number
 }
+
 
 const statusCor: Record<string, string> = {
     PENDENTE: '#f59e0b',
@@ -186,11 +188,12 @@ const CalendarioProfessor: React.FC = () => {
     solicitacoes.forEach(s => {
         const data = s.dataAusencia; // "YYYY-MM-DD"
         if (!eventosPorData[data]) eventosPorData[data] = [];
+// eventosPorData (dentro do forEach)
         eventosPorData[data].push({
             data,
             motivo: s.motivo,
             status: s.status,
-            aulaId: s.aula.id,
+            aulaNome: s.aula.nomeDisciplina || `#${s.aula.id}`, // 👈 era: aulaId: s.aula.id
         });
     });
 
@@ -357,8 +360,8 @@ const CalendarioProfessor: React.FC = () => {
                                 <div className="detalhe-body">
                                     <span className="detalhe-label">Motivo</span>
                                     <span className="detalhe-valor">{ev.motivo}</span>
-                                    <span className="detalhe-label" style={{ marginTop: 8 }}>Aula ID</span>
-                                    <span className="detalhe-valor">#{ev.aulaId}</span>
+                                    <span className="detalhe-label">Aula</span>
+                                    <span className="detalhe-valor">{ev.aulaNome}</span> {/* 👈 era: #{ev.aulaId} */}
                                     <span className="detalhe-label" style={{ marginTop: 8 }}>Status</span>
                                     <span className="detalhe-badge" style={{ backgroundColor: statusCor[ev.status] + '22', color: statusCor[ev.status] }}>
                                         {ev.status}
