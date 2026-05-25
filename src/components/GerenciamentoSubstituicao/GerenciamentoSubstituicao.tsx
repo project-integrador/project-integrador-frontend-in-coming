@@ -647,7 +647,7 @@ const GerenciamentoSubstituicao: React.FC = () => {
 
                                     <tr key={s.id}>
 
-                                        <td>#{s.id}</td>
+                                        <td>{s.id}</td>
 
                                         <td>
                                             {s.professorSubstituto?.nome || '—'}
@@ -736,7 +736,7 @@ const GerenciamentoSubstituicao: React.FC = () => {
                     >
 
                         <h3>
-                            Editar Substituição #
+                            Editar Substituição
                             {subEditando.id}
                         </h3>
 

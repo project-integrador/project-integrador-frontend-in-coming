@@ -329,7 +329,7 @@ const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ co
                         <tbody>
                         {solicitacoes.length > 0 ? solicitacoes.map((s) => (
                             <tr key={s.id}>
-                                <td>#{s.id}</td>
+                                <td>{s.id}</td>
                                 <td>{formatarData(s.dataAusencia)}</td>
                                 <td>{s.motivo}</td>
                                 <td>{s.professor.nome || `#${s.professor.id}`}</td>
@@ -480,10 +480,10 @@ const TelaSubstituicoes: React.FC = () => {
                         <tbody>
                         {substituicoes.length > 0 ? substituicoes.map((s) => (
                             <tr key={s.id}>
-                                <td>#{s.id}</td>
+                                <td>{s.id}</td>
                                 <td>{s.professorSubstituto?.nome || '—'}</td>
                                 <td>{s.coordenador?.nome || '—'}</td>
-                                <td>#{s.solicitacaoAusencia?.id || '—'}</td>
+                                <td>{s.solicitacaoAusencia?.id || '—'}</td>
                                 <td>{s.solicitacaoAusencia?.dataAusencia || '—'}</td>
                                 <td>{s.solicitacaoAusencia?.motivo || '—'}</td>
                             </tr>
@@ -593,7 +593,7 @@ const TelaAulas: React.FC = () => {
                         <tbody>
                         {aulasFiltradas.length > 0 ? aulasFiltradas.map((a) => (
                             <tr key={a.id}>
-                                <td>#{a.id}</td>
+                                <td>{a.id}</td>
                                 <td>{a.nomeDisciplina}</td>
                                 <td><span className="badge-horas">{a.cargaHoraria}h</span></td>
                                 <td>{a.professorTitular?.nome || '—'}</td>
@@ -676,7 +676,7 @@ const TelaUsuarios: React.FC = () => {
                             <tbody>
                             {professores.map((p, i) => (
                                 <tr key={i}>
-                                    <td>#{p.id}</td>
+                                    <td>{p.id}</td>
                                     <td>{p.nome}</td>
                                     <td>{p.email}</td>
                                     <td>{p.matricula}</td>
@@ -705,7 +705,7 @@ const TelaUsuarios: React.FC = () => {
                             <tbody>
                             {coordenadores.map((c, i) => (
                                 <tr key={i}>
-                                    <td>#{c.id}</td>
+                                    <td>{c.id}</td>
                                     <td>{c.nome}</td>
                                     <td>{c.email}</td>
                                     <td>{c.matricula}</td>

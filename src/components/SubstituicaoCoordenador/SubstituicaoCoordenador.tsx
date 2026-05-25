@@ -191,7 +191,7 @@ const TelaSubstituicoes: React.FC = () => {
                         <tbody>
                         {substituicoes.length > 0 ? substituicoes.map((s) => (
                             <tr key={s.id}>
-                                <td>#{s.id}</td>
+                                <td>{s.id}</td>
                                 <td>{s.professorSubstituto?.nome || '—'}</td>
                                 <td>{s.coordenador?.nome || '—'}</td>
                                 <td>{s.solicitacaoAusencia?.professor?.nome || '—'}</td>
