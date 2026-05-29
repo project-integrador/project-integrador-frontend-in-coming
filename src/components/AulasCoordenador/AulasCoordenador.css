@@ -210,3 +210,160 @@
     align-items: center;
     gap: 6px;
 }
+/* ─── Filtro por professor ─── */
+
+.professor-filtro-section {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.professor-filtro-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.professor-filtro-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-limpar-filtro {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-limpar-filtro:hover {
+    background: #fecaca;
+}
+
+.professor-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.professor-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px 6px 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 13px;
+    color: #334155;
+    font-weight: 500;
+}
+
+.professor-chip:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+}
+
+.professor-chip.ativo {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(29, 78, 216, 0.25);
+}
+
+.chip-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.professor-chip.ativo .chip-avatar {
+    background: rgba(255,255,255,0.25);
+}
+
+.chip-nome {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.chip-horas {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    color: #475569;
+    white-space: nowrap;
+}
+
+.professor-chip.ativo .chip-horas {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+/* ─── Botão professor na tabela (clicável) ─── */
+
+.professor-cell-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 4px 8px 4px 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #334155;
+    font-weight: 500;
+    transition: all 0.15s;
+}
+
+.professor-cell-btn:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.professor-cell-btn.ativo {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+/* ─── Row destacada quando filtrada ─── */
+
+.row-destaque {
+    background: #f0f7ff !important;
+}
+
+.row-destaque:hover {
+    background: #e0f0ff !important;
+}
