@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AulasCoordenador.css';
 import {
     User, Users, LayoutDashboard, LogOut, ShieldCheck, RefreshCw,
-    BookOpen, Clock, GraduationCap, Settings, X, Save, Camera, CalendarDays
+    BookOpen, Clock, GraduationCap, Settings, X, Save, Camera, CalendarDays, ChevronDown
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -143,12 +143,16 @@ const NavegacaoCoordenador: React.FC<SidebarProps> = ({ coordenador, fotoUrl, on
     );
 };
 
+// ─── Tela de Aulas ────────────────────────────────────────────────────────────
+
 const TelaAulas: React.FC = () => {
     const navigate = useNavigate();
     const [aulas, setAulas] = useState<AulaDTO[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
     const [busca, setBusca] = useState('');
+    const [professorFiltro, setProfessorFiltro] = useState<number | null>(null);
+    const [dropdownAberto, setDropdownAberto] = useState(false);
 
     useEffect(() => {
         axios.get('http://localhost:8080/aula')
@@ -157,60 +161,188 @@ const TelaAulas: React.FC = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    const aulasFiltradas = aulas.filter(a =>
-        a.nomeDisciplina.toLowerCase().includes(busca.toLowerCase()) ||
-        a.professorTitular?.nome?.toLowerCase().includes(busca.toLowerCase())
+    // Lista de professores únicos extraída das aulas
+    const professoresUnicos = Array.from(
+        new Map(
+            aulas
+                .filter(a => a.professorTitular?.id)
+                .map(a => [a.professorTitular!.id, a.professorTitular!])
+        ).values()
     );
+
+    const aulasFiltradas = aulas.filter(a => {
+        const buscaOk =
+            a.nomeDisciplina.toLowerCase().includes(busca.toLowerCase()) ||
+            a.professorTitular?.nome?.toLowerCase().includes(busca.toLowerCase());
+        const professorOk = professorFiltro === null || a.professorTitular?.id === professorFiltro;
+        return buscaOk && professorOk;
+    });
+
     const totalHoras = aulas.reduce((acc, a) => acc + (a.cargaHoraria || 0), 0);
+
+    // Horas do professor selecionado (ou total se nenhum)
+    const horasExibidas = professorFiltro === null
+        ? totalHoras
+        : aulas
+            .filter(a => a.professorTitular?.id === professorFiltro)
+            .reduce((acc, a) => acc + (a.cargaHoraria || 0), 0);
+
+    const nomeProfessorSelecionado = professorFiltro === null
+        ? null
+        : professoresUnicos.find(p => p.id === professorFiltro)?.nome || null;
 
     return (
         <main className="main-content">
             <header className="top-header">
-                <div className="header-title"><h1>Aulas</h1><p>Visualize todas as aulas e seus professores titulares.</p></div>
-                <div className="header-actions"><div className="avatar-top"><User size={20} color="#fff" /></div></div>
+                <div className="header-title">
+                    <h1>Aulas</h1>
+                    <p>Visualize todas as aulas e filtre por professor titular.</p>
+                </div>
+                <div className="header-actions">
+                    <div className="avatar-top"><User size={20} color="#fff" /></div>
+                </div>
             </header>
+
             <section className="summary-cards">
                 <div className="card">
                     <div className="card-icon blue"><BookOpen size={24} /></div>
-                    <div className="card-info"><span className="label">Total de Aulas</span><span className="value">{aulas.length}</span><span className="desc">Disciplinas cadastradas</span></div>
+                    <div className="card-info">
+                        <span className="label">Total de Aulas</span>
+                        <span className="value">{aulas.length}</span>
+                        <span className="desc">Disciplinas cadastradas</span>
+                    </div>
                 </div>
-                <div className="card">
+                <div className="card card-horas-destaque" style={professorFiltro ? { borderColor: '#3b82f6', background: '#eff6ff' } : {}}>
                     <div className="card-icon green"><Clock size={24} /></div>
-                    <div className="card-info"><span className="label">Carga Horária Total</span><span className="value">{totalHoras}h</span><span className="desc">Horas somadas</span></div>
+                    <div className="card-info">
+                        <span className="label">
+                            {professorFiltro ? `Horas de ${nomeProfessorSelecionado?.split(' ')[0]}` : 'Carga Horária Total'}
+                        </span>
+                        <span className="value">{horasExibidas}h</span>
+                        <span className="desc">
+                            {professorFiltro ? 'Somente deste professor' : 'Todos os professores'}
+                        </span>
+                    </div>
                 </div>
                 <div className="card">
                     <div className="card-icon yellow"><GraduationCap size={24} /></div>
-                    <div className="card-info"><span className="label">Professores</span><span className="value">{new Set(aulas.map(a => a.professorTitular?.id)).size}</span><span className="desc">Professores com aulas</span></div>
+                    <div className="card-info">
+                        <span className="label">Professores</span>
+                        <span className="value">{professoresUnicos.length}</span>
+                        <span className="desc">Professores com aulas</span>
+                    </div>
                 </div>
             </section>
+
+            {/* ── Filtro por professor (chips) ── */}
+            <section className="professor-filtro-section">
+                <div className="professor-filtro-header">
+                    <span className="professor-filtro-label">
+                        <GraduationCap size={14} /> Filtrar por professor
+                    </span>
+                    {professorFiltro !== null && (
+                        <button className="btn-limpar-filtro" onClick={() => setProfessorFiltro(null)}>
+                            <X size={12} /> Limpar filtro
+                        </button>
+                    )}
+                </div>
+                <div className="professor-chips">
+                    {professoresUnicos.map(p => {
+                        const horasProf = aulas
+                            .filter(a => a.professorTitular?.id === p.id)
+                            .reduce((acc, a) => acc + (a.cargaHoraria || 0), 0);
+                        const ativo = professorFiltro === p.id;
+                        return (
+                            <button
+                                key={p.id}
+                                className={`professor-chip ${ativo ? 'ativo' : ''}`}
+                                onClick={() => setProfessorFiltro(ativo ? null : p.id!)}
+                            >
+                                <div className="chip-avatar">
+                                    <User size={12} />
+                                </div>
+                                <span className="chip-nome">{p.nome}</span>
+                                <span className="chip-horas">{horasProf}h</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </section>
+
             <section className="panel">
                 <div className="panel-header">
-                    <h3>Lista de Aulas ({aulasFiltradas.length})</h3>
+                    <h3>
+                        {professorFiltro
+                            ? `Aulas de ${nomeProfessorSelecionado} (${aulasFiltradas.length})`
+                            : `Lista de Aulas (${aulasFiltradas.length})`
+                        }
+                    </h3>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <input className="input-busca" type="text" placeholder="Buscar por disciplina ou professor..." value={busca} onChange={e => setBusca(e.target.value)} />
-                        <button onClick={() => navigate('/coordenador-criar-aulas')} style={{ padding: '8px 16px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                        <input
+                            className="input-busca"
+                            type="text"
+                            placeholder="Buscar disciplina ou professor..."
+                            value={busca}
+                            onChange={e => setBusca(e.target.value)}
+                        />
+                        <button
+                            onClick={() => navigate('/coordenador-criar-aulas')}
+                            style={{ padding: '8px 16px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                        >
                             + Gerenciar Aulas
                         </button>
                     </div>
                 </div>
+
                 {loading && <p className="loading-text">Carregando...</p>}
                 {erro && <div className="alert-error"><strong>🚨</strong> {erro}</div>}
+
                 {!loading && !erro && (
                     <table className="schedule-table">
                         <thead>
-                        <tr><th>ID</th><th>Disciplina</th><th>Carga Horária</th><th>Professor Titular</th><th>E-mail do Professor</th></tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Disciplina</th>
+                            <th>Carga Horária</th>
+                            <th>Professor Titular</th>
+                            <th>E-mail do Professor</th>
+                        </tr>
                         </thead>
                         <tbody>
                         {aulasFiltradas.length > 0 ? aulasFiltradas.map((a) => (
-                            <tr key={a.id}>
+                            <tr key={a.id} className={professorFiltro === a.professorTitular?.id ? 'row-destaque' : ''}>
                                 <td>#{a.id}</td>
-                                <td><div className="disciplina-cell"><div className="disciplina-icon"><BookOpen size={14} /></div>{a.nomeDisciplina}</div></td>
+                                <td>
+                                    <div className="disciplina-cell">
+                                        <div className="disciplina-icon"><BookOpen size={14} /></div>
+                                        {a.nomeDisciplina}
+                                    </div>
+                                </td>
                                 <td><span className="badge-horas">{a.cargaHoraria}h</span></td>
-                                <td><div className="professor-cell"><div className="avatar-mini-table"><User size={14} color="#64748b" /></div>{a.professorTitular?.nome || '—'}</div></td>
+                                <td>
+                                    <button
+                                        className={`professor-cell-btn ${professorFiltro === a.professorTitular?.id ? 'ativo' : ''}`}
+                                        onClick={() => {
+                                            if (a.professorTitular?.id) {
+                                                setProfessorFiltro(prev =>
+                                                    prev === a.professorTitular!.id ? null : a.professorTitular!.id!
+                                                );
+                                            }
+                                        }}
+                                        title="Clique para filtrar por este professor"
+                                    >
+                                        <div className="avatar-mini-table"><User size={14} color="#64748b" /></div>
+                                        {a.professorTitular?.nome || '—'}
+                                    </button>
+                                </td>
                                 <td className="email-cell">{a.professorTitular?.email || '—'}</td>
                             </tr>
                         )) : (
-                            <tr><td colSpan={5} style={{ textAlign: 'center', padding: '24px', color: '#64748b' }}>{busca ? 'Nenhuma aula encontrada para essa busca.' : 'Nenhuma aula cadastrada.'}</td></tr>
+                            <tr>
+                                <td colSpan={5} style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                                    {busca || professorFiltro ? 'Nenhuma aula encontrada para esse filtro.' : 'Nenhuma aula cadastrada.'}
+                                </td>
+                            </tr>
                         )}
                         </tbody>
                     </table>
