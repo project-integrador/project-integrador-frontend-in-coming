@@ -907,4 +907,193 @@
     align-items: center;
     gap: 6px;
 }
+/* ─── Modal Designar ─────────────────────────────────────── */
 
+.modal-designar {
+    max-width: 560px;
+    width: 100%;
+}
+
+.filtros-designar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 14px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filtro-grupo label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.filtro-grupo select {
+    padding: 7px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    outline: none;
+    cursor: pointer;
+    transition: border 0.2s;
+}
+
+.filtro-grupo select:focus {
+    border-color: #3b82f6;
+}
+
+.select-professores {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    outline: none;
+    cursor: pointer;
+    transition: border 0.2s;
+    padding: 4px;
+}
+
+.select-professores:focus {
+    border-color: #3b82f6;
+}
+
+.select-professores option {
+    padding: 8px;
+    line-height: 1.8;
+}
+
+.select-professores option:checked {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* Card professor selecionado */
+.card-professor-selecionado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.card-prof-avatar {
+    width: 38px;
+    height: 38px;
+    background: #dbeafe;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-prof-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.card-prof-nome {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e40af;
+}
+
+.card-prof-detalhe {
+    font-size: 12px;
+    color: #3b82f6;
+}
+
+.card-prof-stats {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.stat-valor {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e40af;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: #3b82f6;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* Botões ícone editar/excluir */
+.btn-editar-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    cursor: pointer;
+    color: #64748b;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-editar-icon:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.btn-excluir-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 7px;
+    cursor: pointer;
+    color: #f43f5e;
+    transition: background 0.2s;
+}
+
+.btn-excluir-icon:hover {
+    background: #ffe4e6;
+}
+
+/* Badge resolvida */
+.badge-resolvida {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+}
