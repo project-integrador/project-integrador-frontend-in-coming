@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -17,13 +17,19 @@ import { SubstituicaoDTO } from "../../dtos/SubstituicaoDTO";
 function PDashboardProfessor(): JSX.Element {
 
     const location = useLocation();
+    const email = localStorage.getItem("userEmail") || "";
 
     const [professor, setProfessor] = useState<ProfessorDTO | null>(null);
     const [minhasAulas, setMinhasAulas] = useState<AulaDTO[]>([]);
     const [minhasSolicitacoes, setMinhasSolicitacoes] = useState<SolicitacaoAusenciaDTO[]>([]);
     const [minhasSubstituicoes, setMinhasSubstituicoes] = useState<SubstituicaoDTO[]>([]);
 
-    const email = localStorage.getItem("userEmail") || "";
+    // ← Função separada para buscar solicitações
+    const carregarSolicitacoes = useCallback(() => {
+        axios.get(`http://localhost:8080/solicitacao/professor?email=${email}`)
+            .then(res => setMinhasSolicitacoes(Array.isArray(res.data) ? res.data : []))
+            .catch(err => console.error("Erro ao buscar solicitações:", err));
+    }, [email]);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/professor?email=${email}`)
@@ -34,9 +40,7 @@ function PDashboardProfessor(): JSX.Element {
             .then(res => setMinhasAulas(Array.isArray(res.data) ? res.data : []))
             .catch(err => console.error("Erro ao buscar aulas:", err));
 
-        axios.get(`http://localhost:8080/solicitacao/professor?email=${email}`)
-            .then(res => setMinhasSolicitacoes(Array.isArray(res.data) ? res.data : []))
-            .catch(err => console.error("Erro ao buscar solicitações:", err));
+        carregarSolicitacoes(); // ← usa a função separada
 
         axios.get(`http://localhost:8080/substituicao`)
             .then(res => setMinhasSubstituicoes(Array.isArray(res.data) ? res.data : []))
@@ -49,7 +53,12 @@ function PDashboardProfessor(): JSX.Element {
             case '/solicitar-substituicao':
                 return <SolicitarSubstituicao />;
             case '/minhas-solicitacoes':
-                return <MinhasSolicitacoes solicitacoes={minhasSolicitacoes} />;
+                return (
+                    <MinhasSolicitacoes
+                        solicitacoes={minhasSolicitacoes}
+                        onAtualizar={carregarSolicitacoes}  // ← direto, sem inline
+                    />
+                );
             case '/calendario':
                 return <PTabelas />;
             default:
