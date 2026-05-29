@@ -4,7 +4,7 @@ import {
     User, Users, FileText,
     CheckCircle, XCircle, LayoutDashboard,
     LogOut, ClipboardList, ShieldCheck, RefreshCw, BookOpen, UserPlus,
-    Settings, X, Save, Camera, CalendarDays
+    Settings, X, Save, Camera, CalendarDays, Pencil, Trash2
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -109,6 +109,149 @@ const ModalPerfil: React.FC<ModalPerfilProps> = ({ coordenador, fotoUrl, onClose
     );
 };
 
+// ─── Modal Editar Solicitação ─────────────────────────────────────────────────
+
+interface ModalEditarProps {
+    solicitacao: SolicitacaoAusenciaDTO;
+    onClose: () => void;
+    onSalvar: (atualizada: SolicitacaoAusenciaDTO) => void;
+}
+
+const ModalEditarSolicitacao: React.FC<ModalEditarProps> = ({ solicitacao, onClose, onSalvar }) => {
+    const [motivo, setMotivo] = useState(solicitacao.motivo || '');
+    const [dataAusencia, setDataAusencia] = useState(solicitacao.dataAusencia || '');
+    const [statusSolicitacao, setStatusSolicitacao] = useState(solicitacao.status || 'PENDENTE');
+    const [loading, setLoading] = useState(false);
+
+    const handleSalvar = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!motivo.trim() || !dataAusencia) return;
+        setLoading(true);
+        try {
+            const res = await axios.put(`http://localhost:8080/solicitacao/${solicitacao.id}`, {
+                dataAusencia,
+                motivo: motivo.trim(),
+                status: statusSolicitacao,
+                aula: { id: solicitacao.aula.id },
+                professor: { id: solicitacao.professor.id },
+            });
+            onSalvar({ ...res.data, professor: solicitacao.professor, aula: solicitacao.aula });
+            onClose();
+            alert('Solicitação atualizada com sucesso!');
+        } catch {
+            alert('Erro ao atualizar solicitação.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-box" onClick={e => e.stopPropagation()}>
+                <div className="modal-perfil-header">
+                    <h3>Editar Solicitação #{solicitacao.id}</h3>
+                    <button className="btn-fechar-modal" onClick={onClose}><X size={18} /></button>
+                </div>
+                <div className="modal-info-row">
+                    <span className="modal-info-label">Professor</span>
+                    <span className="modal-info-value">{solicitacao.professor.nome || `#${solicitacao.professor.id}`}</span>
+                </div>
+                <div className="modal-info-row">
+                    <span className="modal-info-label">Aula</span>
+                    <span className="modal-info-value">{solicitacao.aula.nomeDisciplina || `#${solicitacao.aula.id}`}</span>
+                </div>
+                <form onSubmit={handleSalvar}>
+                    <div className="form-group-modal">
+                        <label>Data de Ausência</label>
+                        <input
+                            type="date"
+                            value={dataAusencia}
+                            onChange={e => setDataAusencia(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group-modal">
+                        <label>Motivo</label>
+                        <input
+                            type="text"
+                            value={motivo}
+                            onChange={e => setMotivo(e.target.value)}
+                            placeholder="Motivo da ausência"
+                            required
+                        />
+                    </div>
+                    <div className="form-group-modal">
+                        <label>Status</label>
+                        <select value={statusSolicitacao} onChange={e => setStatusSolicitacao(e.target.value)}>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="APROVADO">Aprovado</option>
+                            <option value="RECUSADO">Recusado</option>
+                            <option value="RESOLVIDA">Resolvida</option>
+                        </select>
+                    </div>
+                    <div className="modal-actions">
+                        <button type="button" className="btn-cancelar-modal" onClick={onClose}>Cancelar</button>
+                        <button type="submit" className="btn-salvar-modal" disabled={loading}>
+                            <Save size={14} />
+                            {loading ? 'Salvando...' : 'Salvar Alterações'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+// ─── Modal Confirmar Exclusão ─────────────────────────────────────────────────
+
+interface ModalExcluirProps {
+    solicitacao: SolicitacaoAusenciaDTO;
+    onClose: () => void;
+    onConfirmar: () => void;
+    loading: boolean;
+}
+
+const ModalConfirmarExclusao: React.FC<ModalExcluirProps> = ({ solicitacao, onClose, onConfirmar, loading }) => (
+    <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-box" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
+            <div className="modal-perfil-header">
+                <h3>Excluir Solicitação</h3>
+                <button className="btn-fechar-modal" onClick={onClose}><X size={18} /></button>
+            </div>
+            <p style={{ color: '#64748b', fontSize: 14, margin: '16px 0 8px' }}>
+                Tem certeza que deseja excluir a solicitação <strong>#{solicitacao.id}</strong>?
+            </p>
+            <div className="modal-info-row">
+                <span className="modal-info-label">Professor</span>
+                <span className="modal-info-value">{solicitacao.professor.nome || `#${solicitacao.professor.id}`}</span>
+            </div>
+            <div className="modal-info-row">
+                <span className="modal-info-label">Data</span>
+                <span className="modal-info-value">{solicitacao.dataAusencia?.split('-').reverse().join('/')}</span>
+            </div>
+            <div className="modal-info-row">
+                <span className="modal-info-label">Motivo</span>
+                <span className="modal-info-value">{solicitacao.motivo}</span>
+            </div>
+            <p style={{ color: '#f43f5e', fontSize: 13, marginTop: 12 }}>
+                ⚠️ Esta ação não pode ser desfeita.
+            </p>
+            <div className="modal-actions" style={{ marginTop: 20 }}>
+                <button type="button" className="btn-cancelar-modal" onClick={onClose}>Cancelar</button>
+                <button
+                    type="button"
+                    onClick={onConfirmar}
+                    disabled={loading}
+                    style={{ background: '#f43f5e', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                >
+                    <Trash2 size={14} />
+                    {loading ? 'Excluindo...' : 'Confirmar Exclusão'}
+                </button>
+            </div>
+        </div>
+    </div>
+);
+
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
 interface SidebarProps {
@@ -126,12 +269,9 @@ const NavegacaoCoordenador: React.FC<SidebarProps> = ({ coordenador, fotoUrl, on
     return (
         <aside className="sidebar">
             <div className="sidebar-header">
-                <div className="logo-icon-small">
-                    <ShieldCheck color="#fff" size={24} />
-                </div>
+                <div className="logo-icon-small"><ShieldCheck color="#fff" size={24} /></div>
                 <h2>S-<span>RAF</span></h2>
             </div>
-
             <nav className="sidebar-nav">
                 <button className={`nav-item ${isActive('/dashboard-coordenador') ? 'active' : ''}`} onClick={() => navigate('/dashboard-coordenador')}>
                     <LayoutDashboard size={20} /><span>Solicitações</span>
@@ -149,7 +289,6 @@ const NavegacaoCoordenador: React.FC<SidebarProps> = ({ coordenador, fotoUrl, on
                     <CalendarDays size={20} /><span>Calendário</span>
                 </button>
             </nav>
-
             <div className="sidebar-footer">
                 <button className="nav-item text-danger" onClick={() => { localStorage.clear(); navigate('/'); }}>
                     <LogOut size={20} /><span>Sair</span>
@@ -177,21 +316,42 @@ const NavegacaoCoordenador: React.FC<SidebarProps> = ({ coordenador, fotoUrl, on
 const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ coordenador }) => {
     const [solicitacoes, setSolicitacoes] = useState<SolicitacaoAusenciaDTO[]>([]);
     const [professores, setProfessores] = useState<ProfessorDTO[]>([]);
+    const [todasAulas, setTodasAulas] = useState<AulaDTO[]>([]);
+    const [substituicoes, setSubstituicoes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [erro, setErro] = useState<string | null>(null);
-    const [modalAberto, setModalAberto] = useState(false);
+
+    // Modal designar
+    const [modalDesignarAberto, setModalDesignarAberto] = useState(false);
     const [solicitacaoSelecionada, setSolicitacaoSelecionada] = useState<SolicitacaoAusenciaDTO | null>(null);
     const [professorSubstitutoId, setProfessorSubstitutoId] = useState('');
     const [loadingDesignar, setLoadingDesignar] = useState(false);
 
+    // Filtros do modal designar
+    const [filtroArea, setFiltroArea] = useState('');
+    const [filtroOrdem, setFiltroOrdem] = useState<'menos-aulas' | 'mais-aulas' | 'nome'>('menos-aulas');
+
+    // Modal editar
+    const [modalEditarAberto, setModalEditarAberto] = useState(false);
+    const [solicitacaoEditando, setSolicitacaoEditando] = useState<SolicitacaoAusenciaDTO | null>(null);
+
+    // Modal excluir
+    const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+    const [solicitacaoExcluindo, setSolicitacaoExcluindo] = useState<SolicitacaoAusenciaDTO | null>(null);
+    const [loadingExcluir, setLoadingExcluir] = useState(false);
+
     const carregar = async () => {
         try {
-            const [resSol, resProf] = await Promise.all([
+            const [resSol, resProf, resSub, resAulas] = await Promise.all([
                 axios.get('http://localhost:8080/solicitacao/todas'),
                 axios.get('http://localhost:8080/professor/todos'),
+                axios.get('http://localhost:8080/substituicao'),
+                axios.get('http://localhost:8080/aula'),
             ]);
             setSolicitacoes(Array.isArray(resSol.data) ? resSol.data : []);
             setProfessores(Array.isArray(resProf.data) ? resProf.data : []);
+            setSubstituicoes(Array.isArray(resSub.data) ? resSub.data : []);
+            setTodasAulas(Array.isArray(resAulas.data) ? resAulas.data : []);
         } catch {
             setErro('Erro ao carregar dados. Verifique se o backend está rodando.');
         } finally {
@@ -201,12 +361,43 @@ const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ co
 
     useEffect(() => { carregar(); }, []);
 
+    // Calcula carga horária total de cada professor
+    const cargaPorProfessor = (professorId: number): number => {
+        return todasAulas
+            .filter(a => a.professorTitular?.id === professorId)
+            .reduce((acc, a) => acc + (a.cargaHoraria || 0), 0);
+    };
+
+    // Conta aulas de cada professor
+    const aulasPorProfessor = (professorId: number): number => {
+        return todasAulas.filter(a => a.professorTitular?.id === professorId).length;
+    };
+
+    // Áreas únicas para o filtro
+    const areasUnicas = Array.from(new Set(
+        professores.map(p => p.areaAtuacao).filter(Boolean)
+    ));
+
+    // Professores filtrados e ordenados para o modal
+    const professoresFiltrados = professores
+        .filter(p => p.ativo)
+        .filter(p => !filtroArea || p.areaAtuacao === filtroArea)
+        .sort((a, b) => {
+            if (filtroOrdem === 'menos-aulas') return aulasPorProfessor(a.id!) - aulasPorProfessor(b.id!);
+            if (filtroOrdem === 'mais-aulas') return aulasPorProfessor(b.id!) - aulasPorProfessor(a.id!);
+            return a.nome.localeCompare(b.nome);
+        });
+
+    const jaTemSubstituto = (solicitacaoId: number) =>
+        substituicoes.some(sub => sub.solicitacaoAusencia?.id === solicitacaoId);
+
     const formatarData = (dataStr: string) => {
         if (!dataStr) return '—';
         const [a, m, d] = dataStr.split('-');
         return `${d}/${m}/${a}`;
     };
 
+    // ── Aprovar / Recusar ──
     const handleAcao = async (id: number | undefined, acao: 'APROVADO' | 'RECUSADO') => {
         if (!id) return;
         try {
@@ -217,10 +408,13 @@ const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ co
         }
     };
 
-    const abrirModalDesignar = (solicitacao: SolicitacaoAusenciaDTO) => {
-        setSolicitacaoSelecionada(solicitacao);
+    // ── Designar substituto ──
+    const abrirModalDesignar = (s: SolicitacaoAusenciaDTO) => {
+        setSolicitacaoSelecionada(s);
         setProfessorSubstitutoId('');
-        setModalAberto(true);
+        setFiltroArea('');
+        setFiltroOrdem('menos-aulas');
+        setModalDesignarAberto(true);
     };
 
     const handleDesignarSubstituto = async (e: React.FormEvent) => {
@@ -235,16 +429,48 @@ const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ co
                 professorSubstituto: { id: parseInt(professorSubstitutoId) },
                 solicitacaoAusencia: { id: solicitacaoSelecionada.id },
             });
-            setSolicitacoes(prev =>
-                prev.map(s => s.id === solicitacaoSelecionada.id ? { ...s, status: 'RESOLVIDA' } : s)
-            );
-            setModalAberto(false);
+            await axios.patch(`http://localhost:8080/solicitacao/${solicitacaoSelecionada.id}/status`, { status: 'RESOLVIDA' });
+            setSolicitacoes(prev => prev.map(s => s.id === solicitacaoSelecionada.id ? { ...s, status: 'RESOLVIDA' } : s));
+            setSubstituicoes(prev => [...prev, { solicitacaoAusencia: { id: solicitacaoSelecionada.id } }]);
+            setModalDesignarAberto(false);
             setSolicitacaoSelecionada(null);
             alert('Substituto designado com sucesso!');
         } catch {
             alert('Erro ao designar substituto.');
         } finally {
             setLoadingDesignar(false);
+        }
+    };
+
+    // ── Editar ──
+    const abrirModalEditar = (s: SolicitacaoAusenciaDTO) => {
+        setSolicitacaoEditando(s);
+        setModalEditarAberto(true);
+    };
+
+    const handleSalvarEdicao = (atualizada: SolicitacaoAusenciaDTO) => {
+        setSolicitacoes(prev => prev.map(s => s.id === atualizada.id ? atualizada : s));
+    };
+
+    // ── Excluir ──
+    const abrirModalExcluir = (s: SolicitacaoAusenciaDTO) => {
+        setSolicitacaoExcluindo(s);
+        setModalExcluirAberto(true);
+    };
+
+    const handleExcluir = async () => {
+        if (!solicitacaoExcluindo?.id) return;
+        setLoadingExcluir(true);
+        try {
+            await axios.delete(`http://localhost:8080/solicitacao/${solicitacaoExcluindo.id}`);
+            setSolicitacoes(prev => prev.filter(s => s.id !== solicitacaoExcluindo.id));
+            setModalExcluirAberto(false);
+            setSolicitacaoExcluindo(null);
+            alert('Solicitação excluída com sucesso!');
+        } catch {
+            alert('Erro ao excluir solicitação.');
+        } finally {
+            setLoadingExcluir(false);
         }
     };
 
@@ -346,14 +572,23 @@ const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ co
                                             </button>
                                         </>
                                     )}
-                                    {s.status === 'APROVADO' && (
+                                    {s.status === 'APROVADO' && !jaTemSubstituto(s.id!) && (
                                         <button className="btn-designar" onClick={() => abrirModalDesignar(s)}>
                                             <UserPlus size={16} /> Designar Substituto
                                         </button>
                                     )}
+                                    {s.status === 'APROVADO' && jaTemSubstituto(s.id!) && (
+                                        <span className="txt-processado">Substituto designado</span>
+                                    )}
                                     {(s.status === 'RECUSADO' || s.status === 'RESOLVIDA') && (
                                         <span className="txt-processado">Processado</span>
                                     )}
+                                    <button className="btn-editar-icon" title="Editar" onClick={() => abrirModalEditar(s)}>
+                                        <Pencil size={15} />
+                                    </button>
+                                    <button className="btn-excluir-icon" title="Excluir" onClick={() => abrirModalExcluir(s)}>
+                                        <Trash2 size={15} />
+                                    </button>
                                 </td>
                             </tr>
                         )) : (
@@ -368,57 +603,132 @@ const TelaSolicitacoes: React.FC<{ coordenador: CoordenadorDTO | null }> = ({ co
                 )}
             </section>
 
-            {/* Modal Designar Substituto */}
-            {modalAberto && solicitacaoSelecionada && (
-                <div className="modal-overlay" onClick={() => setModalAberto(false)}>
-                    <div className="modal-box" onClick={e => e.stopPropagation()}>
-                        <h3>Designar Substituto</h3>
+            {/* ── Modal Designar Substituto ── */}
+            {modalDesignarAberto && solicitacaoSelecionada && (
+                <div className="modal-overlay" onClick={() => setModalDesignarAberto(false)}>
+                    <div className="modal-box modal-designar" onClick={e => e.stopPropagation()}>
+                        <div className="modal-perfil-header">
+                            <h3>Designar Substituto</h3>
+                            <button className="btn-fechar-modal" onClick={() => setModalDesignarAberto(false)}><X size={18} /></button>
+                        </div>
+
                         <p className="modal-sub">
                             Solicitação #{solicitacaoSelecionada.id} — Ausência em {formatarData(solicitacaoSelecionada.dataAusencia)}
                         </p>
+
                         <div className="modal-info-row">
-                            <span className="modal-info-label">Professor</span>
-                            <span className="modal-info-value">
-                                {solicitacaoSelecionada.professor.nome || `#${solicitacaoSelecionada.professor.id}`}
-                            </span>
+                            <span className="modal-info-label">Professor ausente</span>
+                            <span className="modal-info-value">{solicitacaoSelecionada.professor.nome || `#${solicitacaoSelecionada.professor.id}`}</span>
                         </div>
                         <div className="modal-info-row">
                             <span className="modal-info-label">Aula</span>
-                            <span className="modal-info-value">
-                                {solicitacaoSelecionada.aula.nomeDisciplina || `#${solicitacaoSelecionada.aula.id}`}
-                            </span>
+                            <span className="modal-info-value">{solicitacaoSelecionada.aula.nomeDisciplina || `#${solicitacaoSelecionada.aula.id}`}</span>
                         </div>
-                        <div className="modal-info-row">
+                        <div className="modal-info-row" style={{ marginBottom: 20 }}>
                             <span className="modal-info-label">Motivo</span>
                             <span className="modal-info-value">{solicitacaoSelecionada.motivo}</span>
                         </div>
+
+                        {/* Filtros */}
+                        <div className="filtros-designar">
+                            <div className="filtro-grupo">
+                                <label>Filtrar por área</label>
+                                <select value={filtroArea} onChange={e => setFiltroArea(e.target.value)}>
+                                    <option value="">Todas as áreas</option>
+                                    {areasUnicas.map(area => (
+                                        <option key={area} value={area}>{area}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="filtro-grupo">
+                                <label>Ordenar por</label>
+                                <select value={filtroOrdem} onChange={e => setFiltroOrdem(e.target.value as any)}>
+                                    <option value="menos-aulas">Menos aulas alocadas</option>
+                                    <option value="mais-aulas">Mais aulas alocadas</option>
+                                    <option value="nome">Nome (A-Z)</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <form onSubmit={handleDesignarSubstituto}>
                             <div className="form-group-modal">
-                                <label>Professor Substituto</label>
+                                <label>Professor Substituto ({professoresFiltrados.length} disponíveis)</label>
                                 <select
                                     value={professorSubstitutoId}
                                     onChange={e => setProfessorSubstitutoId(e.target.value)}
                                     required
+                                    size={5}
+                                    className="select-professores"
                                 >
-                                    <option value="" disabled>Selecione um professor</option>
-                                    {professores.map(p => (
+                                    {professoresFiltrados.length === 0 ? (
+                                        <option disabled>Nenhum professor encontrado</option>
+                                    ) : professoresFiltrados.map(p => (
                                         <option key={p.id} value={p.id}>
-                                            {p.nome} — {p.email}
+                                            {p.nome} — {p.areaAtuacao || 'Sem área'} — {aulasPorProfessor(p.id!)} aula(s) / {cargaPorProfessor(p.id!)}h
                                         </option>
                                     ))}
                                 </select>
                             </div>
+
+                            {/* Card do professor selecionado */}
+                            {professorSubstitutoId && (() => {
+                                const prof = professores.find(p => String(p.id) === professorSubstitutoId);
+                                if (!prof) return null;
+                                return (
+                                    <div className="card-professor-selecionado">
+                                        <div className="card-prof-avatar">
+                                            <User size={20} color="#3b82f6" />
+                                        </div>
+                                        <div className="card-prof-info">
+                                            <span className="card-prof-nome">{prof.nome}</span>
+                                            <span className="card-prof-detalhe">{prof.email}</span>
+                                            <span className="card-prof-detalhe">{prof.areaAtuacao || 'Sem área definida'}</span>
+                                        </div>
+                                        <div className="card-prof-stats">
+                                            <div className="stat-item">
+                                                <span className="stat-valor">{aulasPorProfessor(prof.id!)}</span>
+                                                <span className="stat-label">aulas</span>
+                                            </div>
+                                            <div className="stat-item">
+                                                <span className="stat-valor">{cargaPorProfessor(prof.id!)}h</span>
+                                                <span className="stat-label">carga</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+
                             <div className="modal-actions">
-                                <button type="button" className="btn-cancelar-modal" onClick={() => setModalAberto(false)}>
+                                <button type="button" className="btn-cancelar-modal" onClick={() => setModalDesignarAberto(false)}>
                                     Cancelar
                                 </button>
                                 <button type="submit" className="btn-salvar-modal" disabled={loadingDesignar}>
+                                    <UserPlus size={14} />
                                     {loadingDesignar ? 'Designando...' : 'Confirmar Substituto'}
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+            )}
+
+            {/* Modal Editar */}
+            {modalEditarAberto && solicitacaoEditando && (
+                <ModalEditarSolicitacao
+                    solicitacao={solicitacaoEditando}
+                    onClose={() => { setModalEditarAberto(false); setSolicitacaoEditando(null); }}
+                    onSalvar={handleSalvarEdicao}
+                />
+            )}
+
+            {/* Modal Excluir */}
+            {modalExcluirAberto && solicitacaoExcluindo && (
+                <ModalConfirmarExclusao
+                    solicitacao={solicitacaoExcluindo}
+                    onClose={() => { setModalExcluirAberto(false); setSolicitacaoExcluindo(null); }}
+                    onConfirmar={handleExcluir}
+                    loading={loadingExcluir}
+                />
             )}
         </main>
     );
@@ -744,10 +1054,6 @@ const DashboardCoordenador: React.FC = () => {
         }
     }, []);
 
-    const handleSalvarNome = (novoNome: string) => {
-        setCoordenador(prev => prev ? { ...prev, nome: novoNome } : prev);
-    };
-
     const renderConteudo = () => {
         switch (location.pathname) {
             case '/coordenador-substituicoes': return <TelaSubstituicoes />;
@@ -770,7 +1076,7 @@ const DashboardCoordenador: React.FC = () => {
                     coordenador={coordenador}
                     fotoUrl={fotoUrl}
                     onClose={() => setModalPerfilAberto(false)}
-                    onSalvar={handleSalvarNome}
+                    onSalvar={novoNome => setCoordenador(prev => prev ? { ...prev, nome: novoNome } : prev)}
                     onFotoChange={setFotoUrl}
                 />
             )}
